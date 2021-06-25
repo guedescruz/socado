@@ -16,6 +16,11 @@
 
 * [Untitled](visao/untitled.md)
 
+## Bruno videos
+
+* [Bruno](bruno-videos/bruno.md)
+* [Untitled](bruno-videos/untitled.md)
+
 ## Guia Caviar - Zabbix
 
 * [Untitled](guia-caviar-zabbix/untitled.md)
@@ -34,7 +39,7 @@
 
 ## Pai ta chato no Graylog
 
-* [Untitled](pai-ta-chato-no-graylog/untitled.md)
+* [Configurando Graylog Master](pai-ta-chato-no-graylog/untitled.md)
 * [Logs do Windao](pai-ta-chato-no-graylog/logs-do-windao.md)
 
 ## Pai ta chato no Wazuh
