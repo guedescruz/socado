@@ -41,3 +41,7 @@
 
 * [Untitled](pai-ta-chato-no-wazuh/untitled.md)
 
+## Linux Lacradasso <a id="hardening-fechadao-com-deus"></a>
+
+* [Linux Hardening - Graylog Server](hardening-fechadao-com-deus/linux-hardening-graylog-server.md)
+
