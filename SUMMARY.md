@@ -2,6 +2,16 @@
 
 * [socado](README.md)
 
+## Bruno videos
+
+* [\#2 - Graylog Single Node](bruno-videos/bruno.md)
+* [\#3 - Wazuh Single Node](bruno-videos/sos-soc-wazuh.md)
+
+## Next4Security - SOC
+
+* [Introdução](next4security-soc/introducao.md)
+* [Hardening e Tunning](next4security-soc/hardening-e-tunning.md)
+
 ## Introduction
 
 * [Guia do Guia](introduction/guia-do-guia.md)
@@ -15,11 +25,6 @@
 ## Visão
 
 * [Untitled](visao/untitled.md)
-
-## Bruno videos
-
-* [Bruno](bruno-videos/bruno.md)
-* [Untitled](bruno-videos/untitled.md)
 
 ## Guia Caviar - Zabbix
 

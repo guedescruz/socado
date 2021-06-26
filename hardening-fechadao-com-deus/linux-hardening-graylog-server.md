@@ -49,10 +49,6 @@ apt-cache search quarentine auto
 apt-cache search quarentine
 ```
 
-{% hint style="info" %}
- Super-powers are granted randomly so please submit an issue if you're not happy with yours.
-{% endhint %}
-
 ### Network Hardening
 
 {% tabs %}
@@ -128,7 +124,7 @@ sysctl -a | grep swap
 ```
 {% endtab %}
 
-{% tab title="" %}
+{% tab title="sysctl config" %}
 {% code title="/etc/sysctl.conf" %}
 ```bash
 vim.swapiness = 01
@@ -158,8 +154,6 @@ mount
 ```
 {% endtab %}
 {% endtabs %}
-
-
 
 {% tabs %}
 {% tab title="Diretorio" %}
@@ -191,40 +185,6 @@ df -h
 {% endtab %}
 {% endtabs %}
 
-Observe o valor `Max size (high water):`
-
-{% tabs %}
-{% tab title="Verificando Max size" %}
-```text
-arc_summary -a
-```
-{% endtab %}
-
-{% tab title="Java ES" %}
-{% code title="/etc/elasticsearch/jvm.options" %}
-```
-Xms<valor do Max size>g
-Xmx<valor do Max size>g
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="Java Graylog" %}
-{% code title="/etc/default/graylog-server" %}
-```
-GRAYLOG_SERVER_JAVA_OPTS="-Xms<Metade do MAX>g -Xmx<Metade do MAX>g (...)"
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="Reiniciando o serviço" %}
-```
-
-systemctl restart elasticsearch.service graylog-server.service
-```
-{% endtab %}
-{% endtabs %}
-
 ### Instalação NTP
 
 {% tabs %}
@@ -246,4 +206,6 @@ dpkg-reconfigure tzdata
 ```
 {% endtab %}
 {% endtabs %}
+
+
 

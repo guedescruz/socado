@@ -1,8 +1,6 @@
-# Bruno
+# \#2 - Graylog Single Node
 
-
-
-## Hardening pão com ovo
+### SO Hardening
 
 Becoming a super hero is a fairly straight forward process:
 
@@ -60,7 +58,7 @@ ufw allow from https
 ```
 {% endtab %}
 
-{% tab title="SSH" %}
+{% tab title="SSH Server" %}
 {% code title="/etc/ssh/sshd\_config" %}
 ```
 Port 5022
@@ -68,6 +66,8 @@ Port 5022
 {% endcode %}
 {% endtab %}
 {% endtabs %}
+
+### Fail2Ban - IP Blocklist
 
 {% tabs %}
 {% tab title="Configurando" %}
@@ -117,7 +117,7 @@ vim.swapiness = 01
 {% endtab %}
 {% endtabs %}
 
-Ponto de montagem, roda um `df -Th`pra ver o antes e o depois.
+Verifique os pontos de montagem com `df -Th`pra ver o antes e o depois.
 
 {% tabs %}
 {% tab title="FSTAB Bombado" %}
@@ -142,7 +142,7 @@ mount
 {% tabs %}
 {% tab title="Diretorio" %}
 ```text
-mkdir -p /opt/fakedisk
+mkdir -p /opt/.fakedisk
 ```
 
 É necessário criar um fakedisk pois, o ZFS é feito em cima de um disco.
@@ -150,8 +150,7 @@ mkdir -p /opt/fakedisk
 
 {% tab title="DD" %}
 ```
-dd status=progress if=/dev/zero of=/fakedisk1 bs=32MB count=4687
-dd status=progress if=/dev/zero oflag=direct of=fakedisk1 bs=1MB count=1000000
+nohup dd status=progress if=/dev/zero oflag=direct of=fakedisk1 bs=1MB count=500000 & 
 ```
 
 
@@ -163,6 +162,7 @@ Max size \(high water\):
 
 {% tab title="Verificando" %}
 ```
+iostat -m 1
 ls -l
 df -h
 ```
@@ -181,8 +181,8 @@ arc_summary -a
 {% tab title="Java ES" %}
 {% code title="/etc/elasticsearch/jvm.options" %}
 ```
-Xms<valor do Max size>g
-Xmx<valor do Max size>g
+-Xms<valor do Max size>g
+-Xmx<valor do Max size>g
 ```
 {% endcode %}
 {% endtab %}
@@ -331,6 +331,8 @@ Configure o dpkg
 ```text
 dpkg-reconfigure tzdata
 ```
+
+### Configurando OpenVPN
 {% endtab %}
 
 {% tab title="Crontab - Update NTP" %}
@@ -343,12 +345,57 @@ dpkg-reconfigure tzdata
 34 4 * * * root cd /opt/threatFeeds/ && git pull
 ```
 {% endcode %}
+
+### Instalação do OpenVPN
 {% endtab %}
 {% endtabs %}
 
-### Instalação do OpenVPN
-
+{% tabs %}
+{% tab title="\#1 Install" %}
 ```text
 apt install openvpn easy-rsa
 ```
+{% endtab %}
+
+{% tab title="\#2 Gerando" %}
+```
+/usr/bin/make-cadir /etc/CA-Graylog/
+cd /etc/CA-Graylog
+./easyrsa init-pki
+./easyrsa build-ca
+./easyrsa gen-dh
+./easyrsa gen-crl
+./easyrsa build-server-full graylog-server nopass
+cd pki && ls
+cd issued && ls
+cd ../private && ls
+```
+{% endtab %}
+{% endtabs %}
+
+```text
+cd /etc/graylog/
+mkdir lookups/
+wget --no-check-certificate -O file.gz "<lookuptables>"
+gunzip file.gz
+mv file GeoLite2-City.mmdb
+```
+
+### Message Processors Configuration
+
+Vá na interface gráfica em **System/Configurations,** onde a ordem de **Message Processor Configuration** ficará a seguinte:
+
+![](../.gitbook/assets/image.png)
+
+Em **Geo-Location Processor**, clique em **Update**, e insira o caminho do diretório anteriormente criado `/etc/graylog/lookups/GeoLite2-City.mmdb`
+
+![](../.gitbook/assets/image%20%282%29.png)
+
+Voltando ao Graylog, no arquivo de configuração, mude a seguinte linha:
+
+```text
+allow_leading_wildcard_searches = true
+```
+
+
 
