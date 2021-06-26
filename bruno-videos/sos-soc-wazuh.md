@@ -13,7 +13,7 @@ apt update && apt dist-upgrade
 
 {% tab title="Instalação de Pacotes" %}
 ```
-apt install htop pmisc tcpdump iptraf openvpn sysstat fail2ban ethtool zfsutils-linux
+apt install htop pmisc tcpdump iptraf openvpn easy-rsa sysstat fail2ban ethtool zfsutils-linux
 ```
 {% endtab %}
 {% endtabs %}
@@ -227,27 +227,15 @@ curl -u "<user>:<passwd>" -k https://127.0.0.1:9200/_cluster/health?pretty
 ### Configurando OpenVPN
 
 {% tabs %}
-{% tab title="\#1 Gerando  Keys" %}
-{% code title="No Service Graylog, execute:" %}
-```text
-/etc/CA-Graylog/easyrsa build-client-full uranus nopass
-cd /etc/openvpn
+{% tab title="\#1 Criando .conf" %}
+{% code title="/usr/share/doc/openvpn/examples/sample-config-files/" %}
 ```
-{% endcode %}
-
-Ao Executar este comando será gerando o arquivo \`\`
-{% endtab %}
-
-{% tab title="\#2 Criando .conf" %}
-{% code title="Volte ao servidor Wazuh, e execute:" %}
-```
-cd /usr/share/doc/openvpn/examples/sample-config-files/
 cat client.conf > /etc/openvpn/graylogVPNClient.conf
 ```
 {% endcode %}
 {% endtab %}
 
-{% tab title="\#3 Edit .conf" %}
+{% tab title="\#3 Configurando .conf" %}
 {% code title="/etc/openvpn/graylogVPNClient.conf" %}
 ```
 proto tcp
@@ -256,14 +244,30 @@ remote 209.126.85.1 25922
 ;remote myserver-1 1194
 <ca>
 #CONTEUDO DO CERTIFICADO 
-#GERADO NO SERVIDOR GRAYLOG 
+#GERADO NO GRAYLOG MASTER
+#/etc/CA-Graylog/pki/ca.crt
 </ca>
+
+<cert>
+#GERADO NO GRAYLOG MASTER
+#/etc/CA-Graylog/pki/issued/uranus.crt
+</cert>
+
+<key>
+#GERADO NO GRAYLOG MASTER
+#/etc/CA-Graylog/pki/private/uranus.key
+</key>
+
+tls-auth ta.key 1
+cipher AES-128-CBC
+
 ```
 {% endcode %}
 
 * **209.126.85.1** =&gt; é o IP com quem queremos fechar a VPN;
 * **25922** =&gt; é a porta que deve estar aberta para esta comunicação no outro servidor. \(Verifica com`netstat -lnp`\);
-* Dentro das tags &lt;ca&gt;&lt;/ca&gt; deve ser inserido o conteudo do certificado gerado duante a segunda etapa de configuração da VPN;
+* Dentro das tags `<ca></ca>`, `<cert></cert>`e`<key></key>`deve ser inserido o conteudo do gerado duante a[ etapa \#1 de configuração da VPN no Graylog](bruno.md#configurando-o-openvpn);
+* Também mude o algorito de criptografia de AES-256 para AES-128;
 {% endtab %}
 
 {% tab title="\#4 Reiniciando Serviço" %}

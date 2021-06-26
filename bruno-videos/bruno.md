@@ -13,7 +13,7 @@ apt update && apt dist-upgrade
 
 {% tab title="Instalação de Pacotes" %}
 ```
-apt install htop pmisc tcpdump iptraf sysstat zfsutils-linux fail2ban
+apt install htop pmisc tcpdump iptraf sysstat zfsutils-linux fail2ban openvpn easy-rsa
 ```
 {% endtab %}
 {% endtabs %}
@@ -169,7 +169,30 @@ df -h
 {% endtab %}
 {% endtabs %}
 
-Observe o valor `Max size (high water):`
+## Instalando Graylog Master
+
+## Configurando Graylog Master
+
+### Configurando o OpenVPN
+
+{% tabs %}
+{% tab title="\#1 Gerando" %}
+```
+/usr/bin/make-cadir /etc/CA-Graylog/
+cd /etc/CA-Graylog
+./easyrsa init-pki
+./easyrsa build-ca
+./easyrsa gen-dh
+./easyrsa gen-crl
+./easyrsa build-server-full graylog-server nopass
+./easyrsa build-client-full uranus nopass
+cd /etc/openvpn
+cd pki && ls
+cd issued && ls
+cd ../private && ls
+```
+{% endtab %}
+{% endtabs %}
 
 {% tabs %}
 {% tab title="Verificando Max size" %}
@@ -200,10 +223,10 @@ GRAYLOG_SERVER_JAVA_OPTS="-Xms<Metade do MAX>g -Xmx<Metade do MAX>g (...)"
 
 systemctl restart elasticsearch.service graylog-server.service
 ```
-{% endtab %}
-{% endtabs %}
 
 Configurando Elasticsearch Master e Graylog Master
+{% endtab %}
+{% endtabs %}
 
 {% tabs %}
 {% tab title="Elasticsearch Master" %}
@@ -245,14 +268,14 @@ curl 209.126.85.1:9200/_cluster/health?pretty
 ```
 {% endtab %}
 
-{% tab title="Reiniciar serviços" %}
+{% tab title="" %}
 ```
 
 ```
 {% endtab %}
 {% endtabs %}
 
-Configurando MongoDB
+### Configurando MongoDB
 
 {% tabs %}
 {% tab title="MongoDB" %}
@@ -345,33 +368,10 @@ dpkg-reconfigure tzdata
 34 4 * * * root cd /opt/threatFeeds/ && git pull
 ```
 {% endcode %}
-
-### Instalação do OpenVPN
 {% endtab %}
 {% endtabs %}
 
-{% tabs %}
-{% tab title="\#1 Install" %}
-```text
-apt install openvpn easy-rsa
-```
-{% endtab %}
-
-{% tab title="\#2 Gerando" %}
-```
-/usr/bin/make-cadir /etc/CA-Graylog/
-cd /etc/CA-Graylog
-./easyrsa init-pki
-./easyrsa build-ca
-./easyrsa gen-dh
-./easyrsa gen-crl
-./easyrsa build-server-full graylog-server nopass
-cd pki && ls
-cd issued && ls
-cd ../private && ls
-```
-{% endtab %}
-{% endtabs %}
+### Configuração do Plugin de Geolocalização
 
 ```text
 cd /etc/graylog/
