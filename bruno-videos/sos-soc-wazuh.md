@@ -235,6 +235,17 @@ cat client.conf > /etc/openvpn/graylogVPNClient.conf
 {% endcode %}
 {% endtab %}
 
+{% tab title="\#2 Criando chave tls" %}
+{% code title="/etc/openvpn/ta.key" %}
+```
+#Chave gerado no Graylog Master
+#Cole aqui
+```
+{% endcode %}
+
+* Essa chave foi gerada em 
+{% endtab %}
+
 {% tab title="\#3 Configurando .conf" %}
 {% code title="/etc/openvpn/graylogVPNClient.conf" %}
 ```
@@ -264,10 +275,11 @@ cipher AES-128-CBC
 ```
 {% endcode %}
 
-* **209.126.85.1** =&gt; é o IP com quem queremos fechar a VPN;
-* **25922** =&gt; é a porta que deve estar aberta para esta comunicação no outro servidor. \(Verifica com`netstat -lnp`\);
+* **209.126.85.1** 👉 ****é o IP com quem queremos fechar a VPN;
+* **25922**  👉 é a porta que deve estar aberta para esta comunicação no outro servidor. \(Verifica com`netstat -lnp`\);
 * Dentro das tags `<ca></ca>`, `<cert></cert>`e`<key></key>`deve ser inserido o conteudo do gerado duante a[ etapa \#1 de configuração da VPN no Graylog](bruno.md#configurando-o-openvpn);
-* Também mude o algorito de criptografia de AES-256 para AES-128;
+* Também mude o algorito de criptografia de `AES-256` para `AES-128`;
+* 
 {% endtab %}
 
 {% tab title="\#4 Reiniciando Serviço" %}
