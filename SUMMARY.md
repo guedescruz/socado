@@ -8,6 +8,7 @@
 * [\#1 - Linux Hardening](bruno-videos/1-linux-hardening.md)
 * [\#2 - Graylog Single Node](bruno-videos/bruno.md)
 * [\#3 - Wazuh Single Node](bruno-videos/sos-soc-wazuh.md)
+* [\#4 - Coleta no Graylog](bruno-videos/4-coleta-no-graylog.md)
 
 ## Next4Security - SOC
 

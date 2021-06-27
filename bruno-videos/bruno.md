@@ -1,175 +1,6 @@
 # \#2 - Graylog Single Node
 
-### SO Hardening
-
-Becoming a super hero is a fairly straight forward process:
-
-{% tabs %}
-{% tab title="Atualização do SO" %}
-```
-apt update && apt dist-upgrade
-```
-{% endtab %}
-
-{% tab title="Instalação de Pacotes" %}
-```
-apt install htop pmisc tcpdump iptraf sysstat zfsutils-linux fail2ban openvpn easy-rsa
-```
-{% endtab %}
-{% endtabs %}
-
-{% tabs %}
-{% tab title="\#1 - Ativando o módulo" %}
-```text
-modprobe zfs
-```
-{% endtab %}
-
-{% tab title="\#2 - Adicionado ao arquivo" %}
-{% code title="/etc/modules" %}
-```
-zfs
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="\#3 - Init Frames" %}
-```
-update-initramfs -k all -u
-```
-{% endtab %}
-{% endtabs %}
-
-```text
-apt-cache search iptables auto deny
-apt-cache search iptables auto block
-apt-cache search quarentine auto
-apt-cache search quarentine
-```
-
-### Network Hardening
-
-{% tabs %}
-{% tab title="Bloqueando portas" %}
-```bash
-ufw allow from 127.0.0.1
-ufw allow 5022/tcp
-ufw allow from https
-```
-{% endtab %}
-
-{% tab title="SSH Server" %}
-{% code title="/etc/ssh/sshd\_config" %}
-```
-Port 5022
-```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
-
-### Fail2Ban - IP Blocklist
-
-{% tabs %}
-{% tab title="Configurando" %}
-{% code title="/etc/fail2ban/jail.d/default-debian.conf" %}
-```text
-[sshd]
-enabled = true
-port = 5022
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="Reiniciando o Serviço" %}
-```
-/etc/init.d/fail2ban restart
-```
-{% endtab %}
-
-{% tab title="Verificando o arquivo" %}
-```
-fail2ban-client status sshd
-```
-{% endtab %}
-{% endtabs %}
-
-### ZFS
-
-{% tabs %}
-{% tab title="Verificando meomria SWAP" %}
-```bash
-free -m
-```
-{% endtab %}
-
-{% tab title="Verificando swapiness" %}
-```bash
-sysctl -a | grep swap
-```
-{% endtab %}
-
-{% tab title="" %}
-{% code title="/etc/sysctl.conf" %}
-```bash
-vim.swapiness = 01
-```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
-
-Verifique os pontos de montagem com `df -Th`pra ver o antes e o depois.
-
-{% tabs %}
-{% tab title="FSTAB Bombado" %}
-{% code title="/etc/fstab" %}
-```bash
-UUID=<UUID> /        ext4    errors=remount-ro,noatime,nodiratim    0 0
-UUID=<UUID> /boot    ext4    defaults,noatime,nodiratime            0 0
-/swapfile   none     swap    sw                                     0 0
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="Carregando as configs" %}
-```
-mount -o remount,noatime,nodiratime /
-mount -o remount,noatime,nodiratime /boot
-mount
-```
-{% endtab %}
-{% endtabs %}
-
-{% tabs %}
-{% tab title="Diretorio" %}
-```text
-mkdir -p /opt/.fakedisk
-```
-
-É necessário criar um fakedisk pois, o ZFS é feito em cima de um disco.
-{% endtab %}
-
-{% tab title="DD" %}
-```
-nohup dd status=progress if=/dev/zero oflag=direct of=fakedisk1 bs=1MB count=500000 & 
-```
-
-
-
-{% hint style="info" %}
-Max size \(high water\):
-{% endhint %}
-{% endtab %}
-
-{% tab title="Verificando" %}
-```
-iostat -m 1
-ls -l
-df -h
-```
-{% endtab %}
-{% endtabs %}
-
-## Instalando Graylog Master
+### Instalando Graylog Master
 
 ## Configurando Graylog Master
 
@@ -190,6 +21,12 @@ cd /etc/openvpn
 cd pki && ls
 cd issued && ls
 cd ../private && ls
+```
+{% endtab %}
+
+{% tab title="\#Liberando Porta" %}
+```
+ufw allow 25922
 ```
 {% endtab %}
 {% endtabs %}
@@ -385,11 +222,11 @@ mv file GeoLite2-City.mmdb
 
 Vá na interface gráfica em **System/Configurations,** onde a ordem de **Message Processor Configuration** ficará a seguinte:
 
-![](../.gitbook/assets/image.png)
+![](../.gitbook/assets/image%20%284%29.png)
 
 Em **Geo-Location Processor**, clique em **Update**, e insira o caminho do diretório anteriormente criado `/etc/graylog/lookups/GeoLite2-City.mmdb`
 
-![](../.gitbook/assets/image%20%282%29.png)
+![](../.gitbook/assets/image%20%281%29.png)
 
 Voltando ao Graylog, no arquivo de configuração, mude a seguinte linha:
 
